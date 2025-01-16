@@ -15,24 +15,22 @@ void spiralGalaxy(){
         float b = r*twist;
         float s = sin(b);
         float c = cos(b);
-        
+         
         float finalX = cx + s * x + c * y; //Plotting the x to be on a spiral
         float finalY = cy + c * x - s * y; //Plotting the y to be on a spiral
 
-       
-        // for(Star otherStar : stars){
-        //     float distance = dist(finalX, finalY, otherStar.pos.x, otherStar.pos.y);
-        //     while(-1 < distance && distance > 1){
 
-        //     }
-        // }
-
-
-
-        float size = random(1,3); //size of the star
+        
         float brightness = random(50,255); //brightness of the star
         color starCol = starColor[int(random(starColor.length))]; // colour of the star
+
+        float size = random(1,2); //size of the star
+        if(starCol == color(255, 100, 100)){
+            size = random(1.75,2); //If star is red, than it is a red gaint
+        }
+
+        int bodies = int(random(2,3));
             
-        stars.add(new Star(finalX,finalY, size, brightness, starCol)); //Putting info into star class  
+        stars.add(new Star(finalX,finalY, size, brightness, starCol, bodies)); //Putting info into star class  
     }
 }

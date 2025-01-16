@@ -31,35 +31,28 @@ public void zoomOut_Clicked(GButton source, GEvent event) { //_CODE_:zoomOut:358
 } //_CODE_:zoomOut:358050:
 
 public void panLeft_Clickled(GButton source, GEvent event) { //_CODE_:panLeft:876359:
-  // if( 0 < xPan){
-  //   xPan -= 12;
-  // }
-  xPan -= panfactor;
+  if( 500/scale < xPan){
+    xPan -= panfactor;
+  }
   
 } //_CODE_:panLeft:876359:
 
 public void panRight_Clicked(GButton source, GEvent event) { //_CODE_:panRight:905221:
-  // if( xPan >= width){
-  //   xPan += 12;
-  // }
-
-  xPan += panfactor;
+  if( xPan < 500*scale){
+    xPan += panfactor;
+  }
 } //_CODE_:panRight:905221:
 
 public void panUp_Clicked(GButton source, GEvent event) { //_CODE_:panUp:619938:
-  // if( 0 < yPan){
-  //   yPan -= 12;
-  // }
-  
-  yPan -= panfactor;
+  if( 400/scale < yPan){
+    yPan -= panfactor;
+  }
 } //_CODE_:panUp:619938:
 
 public void panDown_Clicked(GButton source, GEvent event) { //_CODE_:panDown:224973:
-  // if( yPan >= height){
-  //   yPan += 12;
-  // }
-
-  yPan += panfactor;
+  if( yPan < 400*scale){
+    yPan += panfactor;
+  }
 } //_CODE_:panDown:224973:
 
 public void scaleFactor_Change(GSlider source, GEvent event) { //_CODE_:scaleFactor:398326:
@@ -70,7 +63,28 @@ public void panFactor_Change(GSlider source, GEvent event) { //_CODE_:panFactor:
   panfactor = panFactor.getValueI();
 } //_CODE_:panFactor:327259:
 
+public void resetClicked(GButton source, GEvent event) { //_CODE_:resetButton:256849:
+  resetView();
+} //_CODE_:resetButton:256849:
 
+public void galaxyResetClicked(GButton source, GEvent event) { //_CODE_:galaxyReset:601214:
+  showSolarSystem = false;
+
+  pauseButton.setVisible(false);
+  playButton.setVisible(false);
+
+  animation = true;
+  
+} //_CODE_:galaxyReset:601214:
+
+public void pauseButtonClicked(GButton source, GEvent event) { //_CODE_:pauseButton:316338:
+  animation = false;
+} //_CODE_:pauseButton:316338:
+
+
+public void playButtonClicked(GButton source, GEvent event) { //_CODE_:playButton:622061:
+  animation = true;
+} //_CODE_:playButton:622061:
 
 
 
@@ -81,7 +95,7 @@ public void createGUI(){
   G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
   G4P.setMouseOverEnabled(false);
   surface.setTitle("Sketch Window");
-  window1 = GWindow.getWindow(this, "Sliders and Such", 0, 0, 300, 400, JAVA2D);
+  window1 = GWindow.getWindow(this, "Sliders and Such", 0, 0, 300, 300, JAVA2D);
   window1.noLoop();
   window1.setActionOnClose(G4P.KEEP_OPEN);
   window1.addDrawHandler(this, "win_draw1");
@@ -125,6 +139,22 @@ public void createGUI(){
   panFactor.setLocalColorScheme(GCScheme.CYAN_SCHEME);
   panFactor.setOpaque(false);
   panFactor.addEventHandler(this, "panFactor_Change");
+  resetButton = new GButton(window1, 11, 148, 80, 30);
+  resetButton.setText("Reset View");
+  resetButton.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
+  resetButton.addEventHandler(this, "resetClicked");
+  galaxyReset = new GButton(window1, 134, 148, 80, 30);
+  galaxyReset.setText("Back to Galaxy");
+  galaxyReset.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
+  galaxyReset.addEventHandler(this, "galaxyResetClicked");
+  pauseButton = new GButton(window1, 135, 189, 80, 30);
+  pauseButton.setText("Pause");
+  pauseButton.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
+  pauseButton.addEventHandler(this, "pauseButtonClicked");
+  playButton = new GButton(window1, 10, 189, 80, 30);
+  playButton.setText("Play");
+  playButton.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
+  playButton.addEventHandler(this, "playButtonClicked");
   window1.loop();
 }
 
@@ -139,3 +169,7 @@ GButton panUp;
 GButton panDown; 
 GSlider scaleFactor; 
 GSlider panFactor; 
+GButton resetButton; 
+GButton galaxyReset; 
+GButton pauseButton; 
+GButton playButton; 
