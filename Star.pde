@@ -39,18 +39,22 @@ class Star{
 
             int z = 2;
             for(int i = 0; i < this.numPlanets; i++){
-                //planets.add(new Planet(500+z*2*cos((t*c*(pow(2,2))*2.*PI/360)+a), 400+z*2*sin((t*c*(pow(2,2))*2.*PI/360)+a),2/12));
-                // solarSystem(x+z*r*cos((t*c*(pow(2,n-1))*2.*PI/360)+a),y+z*r*sin((t*c*(pow(2,n-1))*2.*PI/360)+a),r/12,n+1);
-                circle(500+z*(this.size*50)*cos((t*c*(pow(2,2))*2.*PI/360)+a), 400+z*(this.size*50)*sin((t*c*(pow(2,2))*2.*PI/360)+a),(this.size*50)/12);
+                float x = 500+z*(this.size*50)*cos((t*c*(pow(2,2))*2.*PI/360)+a);
+                float y = 400+z*(this.size*50)*sin((t*c*(pow(2,2))*2.*PI/360)+a);
+
+                planets(x,y ,(this.size*50)/12);
                 z += random(2,3);
             }
-
-            // for(Planet p : planets){
-            //     p.drawPlanet();
-            // }
         }
          
     }
+
+    void planets(float x, float y, float size){
+        stroke(0,255,0);
+        fill(0,255,0);
+        circle(x, y,size);
+    }
+ 
 
     void starInfo(){ //Lots of if statments for this :(
         if(showSolarSystem){

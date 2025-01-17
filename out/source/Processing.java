@@ -81,6 +81,7 @@ public void setup(){
 
     pauseButton.setVisible(false);
     playButton.setVisible(false);
+    frameRate(30);
 }
 
 public void draw(){
@@ -101,7 +102,7 @@ public void draw(){
     else{
       s.solarSystem();
       if(animation){
-        t = (t+0.00005f) % 720; //keeping t in the range of 720 degrees
+        t = (t+0.00000000000000000000005f) % 720; //keeping t in the range of 720 degrees
       }
     } 
     s.starInfo();
@@ -211,32 +212,20 @@ public void spiralGalaxy(){
     }
 }
 class Planet{
-    float xPos;
-    float yPos;
-    float distance;
-    float speed;
+    PVector planetPos;
     float size;
     int numMoons;
-    float angle;
 
     // CONSTRUCTOR:
-    Planet(float distance, float speed, float size){
-        this.distance = distance;
-        this.speed = speed;
+    Planet(float x, float y, float size){
+        this.planetPos = new PVector(x,y);
         this.size = size;
         this.numMoons = PApplet.parseInt(random(1,6));
-        this.angle = 0;
-        this.xPos = width/2 + sin(0) * distance;
-        this.yPos = height/2 + cos(0) * distance;
     }
     public void drawPlanet(){
-        this.angle += radians(speed);
-        this.xPos = width/2 + sin(this.angle) * distance;
-        this.yPos = height/2 + cos(this.angle) * distance;
-        
         stroke(0,255,0);
         fill(0,255,0);
-        circle(this.xPos, this.yPos, this.size);
+        circle(this.planetPos.x, this.planetPos.y, this.size);
     }
     
 }
@@ -287,18 +276,22 @@ class Star{
 
             int z = 2;
             for(int i = 0; i < this.numPlanets; i++){
-                //planets.add(new Planet(500+z*2*cos((t*c*(pow(2,2))*2.*PI/360)+a), 400+z*2*sin((t*c*(pow(2,2))*2.*PI/360)+a),2/12));
-                // solarSystem(x+z*r*cos((t*c*(pow(2,n-1))*2.*PI/360)+a),y+z*r*sin((t*c*(pow(2,n-1))*2.*PI/360)+a),r/12,n+1);
-                circle(500+z*(this.size*50)*cos((t*c*(pow(2,2))*2.f*PI/360)+a), 400+z*(this.size*50)*sin((t*c*(pow(2,2))*2.f*PI/360)+a),(this.size*50)/12);
+                float x = 500+z*(this.size*50)*cos((t*c*(pow(2,2))*2.f*PI/360)+a);
+                float y = 400+z*(this.size*50)*sin((t*c*(pow(2,2))*2.f*PI/360)+a);
+
+                planets(x,y ,(this.size*50)/12);
                 z += random(2,3);
             }
-
-            // for(Planet p : planets){
-            //     p.drawPlanet();
-            // }
         }
          
     }
+
+    public void planets(float x, float y, float size){
+        stroke(0,255,0);
+        fill(0,255,0);
+        circle(x, y,size);
+    }
+ 
 
     public void starInfo(){ //Lots of if statments for this :(
         if(showSolarSystem){

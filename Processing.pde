@@ -62,6 +62,7 @@ void setup(){
 
     pauseButton.setVisible(false);
     playButton.setVisible(false);
+    frameRate(30);
 }
 
 void draw(){
@@ -82,7 +83,7 @@ void draw(){
     else{
       s.solarSystem();
       if(animation){
-        t = (t+0.00005) % 720; //keeping t in the range of 720 degrees
+        t = (t+0.000005) % 720; //keeping t in the range of 720 degrees
       }
     } 
     s.starInfo();
