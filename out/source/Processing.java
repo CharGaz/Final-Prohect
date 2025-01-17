@@ -55,12 +55,15 @@ String args[] = {"Star info"};
 boolean showSolarSystem = false;
 boolean animation = true;
 
-
+//Text info
 String[] starData;
 int startLine = 0; 
 int endLine = 1;
+int numPlanets = 0;
 
-public void setup(){           
+
+public void setup(){       
+    colorMode(RGB, 255);    
     /* size commented out by preprocessor */;
     background(0);
     createGUI();
@@ -96,7 +99,7 @@ public void draw(){
     }
 
     else{
-      s.solarSystem(500,400,(s.size*50),1);
+      s.solarSystem();
       if(animation){
         t = (t+0.00005f) % 720; //keeping t in the range of 720 degrees
       }
@@ -115,7 +118,7 @@ public void mousePressed(){
 
   for(Star s : stars){
     //Cheking if mouse is within a star
-    if(x >= s.pos.x - s.size && x <= s.pos.x + s.size && y >= s.pos.y-s.size && y <= s.pos.y + s.size ){
+    if(x >= s.pos.x - s.size && x <= s.pos.x + s.size && y >= s.pos.y-s.size && y <= s.pos.y + s.size && !showSolarSystem){
       resetView();
 
       showSolarSystem = true;
@@ -143,6 +146,7 @@ public class SecondApplet extends PApplet{
   public void setup(){
     surface.setTitle("Solar system info");
     surface.setLocation(0,475);
+    
   }
   public void draw() {
     background(255);
@@ -150,19 +154,23 @@ public class SecondApplet extends PApplet{
     int x = 10;
     int y = 25;
     
+    
 
     for(int i = startLine; i < endLine; i++){
       int fontSize = 15;
       textSize(fontSize);
       
-      while(textWidth(starData[i]) > 300){
-        fontSize-=0.5f;
+      while(textWidth(starData[i]) > 290){
+        fontSize-=0.25f;
         textSize(fontSize);
       }
       text(starData[i],x,y);
-      y += 15;
+      y += 18;
     }
-
+    if(showSolarSystem){
+      textSize(15);
+      text("This star has "+ numPlanets + " planets orbiting it",x,y);
+    }
   }
 }
 
@@ -197,13 +205,43 @@ public void spiralGalaxy(){
             size = random(1.75f,2); //If star is red, than it is a red gaint
         }
 
-        int bodies = PApplet.parseInt(random(2,3));
+        int bodies = PApplet.parseInt(random(2,5));
             
         stars.add(new Star(finalX,finalY, size, brightness, starCol, bodies)); //Putting info into star class  
     }
 }
+class Planet{
+    float xPos;
+    float yPos;
+    float distance;
+    float speed;
+    float size;
+    int numMoons;
+    float angle;
+
+    // CONSTRUCTOR:
+    Planet(float distance, float speed, float size){
+        this.distance = distance;
+        this.speed = speed;
+        this.size = size;
+        this.numMoons = PApplet.parseInt(random(1,6));
+        this.angle = 0;
+        this.xPos = width/2 + sin(0) * distance;
+        this.yPos = height/2 + cos(0) * distance;
+    }
+    public void drawPlanet(){
+        this.angle += radians(speed);
+        this.xPos = width/2 + sin(this.angle) * distance;
+        this.yPos = height/2 + cos(this.angle) * distance;
+        
+        stroke(0,255,0);
+        fill(0,255,0);
+        circle(this.xPos, this.yPos, this.size);
+    }
+    
+}
 public void setupPlanets(){
-    for(int i=0;i<1000;i++){
+    for(int i=0; i<1000; i++){
         initAngle[i]=2.f*PI*random(1);
         orbitDirection[i]=(random(1)<0.5f) ?1:-1;
     } 
@@ -213,83 +251,118 @@ class Star{
     float size;
     float brightness;
     int col;
-    int systemBody;
+    int numPlanets;
+    ArrayList<Planet> planets;
     boolean solarSystem;
 
     //CONSTRUCTOR:
-    Star(float x, float y, float size, float brightness, int col, int body){
+    Star(float x, float y, float size, float brightness, int col, int n){
         this.pos = new PVector(x,y);
         this.size = size;
         this.brightness = brightness;
         this.col = col;
-        this.systemBody = body;
+        this.numPlanets = n;
+        this.planets = new ArrayList<Planet>();
         this.solarSystem = false;
         
     }
 
     public void drawStar(){ //Drawing the star
-  
         stroke(this.col);
         strokeWeight(this.size);
         circle(this.pos.x, this.pos.y, this.size);
         
     } 
-
-    
-
-    public void solarSystem(float x, float y, float r, int n){
+    public void solarSystem(){
         if(solarSystem){
-            if(n == 1){
-                stroke(this.col);
-                fill(this.col);
-            }
-            else if(n==2){
-                stroke(255,0,0);
-                fill(255,0,0);
-            }
-            else if(n == 3){
-                strokeWeight(r/12);
-                stroke(0,255,0);
-                fill(0,255,0);
-            }
-            else{
-                stroke(0,0,255);
-                fill(0,0,255);
-            }
-            circle(x,y, r);
-            if(n == 1){
-                m = 0;
-            }
+            //drawing star in the middle
+            stroke(this.col);
+            fill(this.col);
+            circle(500,400,this.size*50);
 
             a=initAngle[m];
             c=orbitDirection[m++];  
             b=initAngle[m];
             d=orbitDirection[m++];
 
-            if( r > 1){
-                int z = 2;
-                for(int i = 0; i < this.systemBody; i++){
-                    solarSystem(x+z*r*cos((t*c*(pow(2,n-1))*2.f*PI/360)+a),y+z*r*sin((t*c*(pow(2,n-1))*2.f*PI/360)+a),r/12,n+1);
-                    z += random(2,3);
-                }
+            int z = 2;
+            for(int i = 0; i < this.numPlanets; i++){
+                //planets.add(new Planet(500+z*2*cos((t*c*(pow(2,2))*2.*PI/360)+a), 400+z*2*sin((t*c*(pow(2,2))*2.*PI/360)+a),2/12));
+                // solarSystem(x+z*r*cos((t*c*(pow(2,n-1))*2.*PI/360)+a),y+z*r*sin((t*c*(pow(2,n-1))*2.*PI/360)+a),r/12,n+1);
+                circle(500+z*(this.size*50)*cos((t*c*(pow(2,2))*2.f*PI/360)+a), 400+z*(this.size*50)*sin((t*c*(pow(2,2))*2.f*PI/360)+a),(this.size*50)/12);
+                z += random(2,3);
             }
-        } 
+
+            // for(Planet p : planets){
+            //     p.drawPlanet();
+            // }
+        }
+         
     }
 
     public void starInfo(){ //Lots of if statments for this :(
-        if(this.col == color(255, 100, 100) && this.size >= 1.5f){
-            startLine = 2;
-            endLine = 7;
-        }
+        if(showSolarSystem){
+            numPlanets = this.numPlanets;
 
-        if(!showSolarSystem){
+            if(this.col == color(255,100,100)){
+                startLine = 2;
+                endLine = 8;
+
+            }
+
+            if(this.col == color(255,255,255) && this.size < 1.5f){
+                startLine = 8;
+                endLine = 14;
+            }
+        }
+    
+        else{ //If showing galaxy, it will print 'no star selected'
             startLine = 0;
             endLine = 1;
         }
+
+       
     }
 }
 
+//void solarSystem(float x, float y, float r, int n){
+    //     if(solarSystem){
+    //         if(n == 1){
+    //             stroke(this.col);
+    //             fill(this.col);
+    //         }
+    //         else if(n==2){
+    //             stroke(255,0,0);
+    //             fill(255,0,0);
+    //         }
+    //         else if(n == 3){
+    //             strokeWeight(r/12);
+    //             stroke(0,255,0);
+    //             fill(0,255,0);
+    //         }
+    //         else{
+    //             stroke(0,0,255);
+    //             fill(0,0,255);
+    //         }
+    //         circle(x,y, r);
+    //         if(n == 1){
+    //             m = 0;
+    //         }
 
+    //         a=initAngle[m];
+    //         c=orbitDirection[m++];  
+    //         b=initAngle[m];
+    //         d=orbitDirection[m++];
+
+    //         if( r > 1){
+    //             int z = 2;
+    //             for(int i = 0; i < this.systemBody; i++){
+    //                 solarSystem(x+z*r*cos((t*c*(pow(2,n-1))*2.*PI/360)+a),y+z*r*sin((t*c*(pow(2,n-1))*2.*PI/360)+a),r/12,n+1);
+    //                 z += random(2,3);
+    //             }
+    //         }
+    //     } 
+    // }
 
 
 /* =========================================================

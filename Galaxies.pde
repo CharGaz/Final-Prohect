@@ -29,7 +29,7 @@ void spiralGalaxy(){
             size = random(1.75,2); //If star is red, than it is a red gaint
         }
 
-        int bodies = int(random(2,3));
+        int bodies = int(random(2,5));
             
         stars.add(new Star(finalX,finalY, size, brightness, starCol, bodies)); //Putting info into star class  
     }

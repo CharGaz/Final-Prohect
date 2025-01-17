@@ -6,6 +6,47 @@ The heat of this star is 2000 degrees Celcius.
 Due to the cooling of the core, the star starts to expand.
 Red giants are the largest stars in the universe.
 
-White Dwarf:
+White Dwarf
+This is a white dwarf.
+Depsite being only slightly bigger than earth,
+a white dwarf has a mass similair to the sun.
+White Dwarfs a "dead" stars that no longer generates
+endergy through nucleaur fusion. They are still cooling off,
+and that is how it gives off heat and light.
+
+// void solarSystem(){
+//         if(solarSystem){
+//             //drawing star in the middle
+//             stroke(this.col);
+//             fill(this.col);
+//             circle(500,400,this.size*50);
+//             int z = 0;
+//             // int z = 2;
+//             // for(int i = 0; i < this.numPlanets; i++){
+//             //     float c = 2.*PI*random(1);
+//             //     float a = (random(1)<0.5) ?1:-1;
+
+//             //     float x = 500+z*(this.size*50)*cos((t*c*(pow(2,2))*2.*PI/360)+a);
+//             //     float y = 400+2*(this.size*50)*sin((t*c*(pow(2,2))*2.*PI/360)+a);
+//             //     planets.add(new Planet(x,y, this.size*(50/random(5,6)) ));
+//             //     z += random(2,3);
+//             // }
+//             for(int i = 0; i < this.numPlanets; i++){ //need distance, speed and size
+//                 float distance = 50 + z;
+//                 float speed = sqrt(distance);
+//                 float size = this.size*(50/random(6,12));
+
+//                 planets.add(new Planet(distance, speed, size));
+
+//                 z += random(75,125);
+//             }
+//             for(Planet p : planets){
+//                 p.drawPlanet();
+//             }
+
+
+//         }
+         
+//     }
 
 

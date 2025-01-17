@@ -36,12 +36,15 @@ String args[] = {"Star info"};
 boolean showSolarSystem = false;
 boolean animation = true;
 
-
+//Text info
 String[] starData;
 int startLine = 0; 
 int endLine = 1;
+int numPlanets = 0;
 
-void setup(){           
+
+void setup(){       
+    colorMode(RGB, 255);    
     size(1000,800);
     background(0);
     createGUI();
@@ -77,7 +80,7 @@ void draw(){
     }
 
     else{
-      s.solarSystem(500,400,(s.size*50),1);
+      s.solarSystem();
       if(animation){
         t = (t+0.00005) % 720; //keeping t in the range of 720 degrees
       }
@@ -96,7 +99,7 @@ void mousePressed(){
 
   for(Star s : stars){
     //Cheking if mouse is within a star
-    if(x >= s.pos.x - s.size && x <= s.pos.x + s.size && y >= s.pos.y-s.size && y <= s.pos.y + s.size ){
+    if(x >= s.pos.x - s.size && x <= s.pos.x + s.size && y >= s.pos.y-s.size && y <= s.pos.y + s.size && !showSolarSystem){
       resetView();
 
       showSolarSystem = true;
@@ -124,6 +127,7 @@ public class SecondApplet extends PApplet{
   public void setup(){
     surface.setTitle("Solar system info");
     surface.setLocation(0,475);
+    
   }
   public void draw() {
     background(255);
@@ -131,19 +135,23 @@ public class SecondApplet extends PApplet{
     int x = 10;
     int y = 25;
     
+    
 
     for(int i = startLine; i < endLine; i++){
       int fontSize = 15;
       textSize(fontSize);
       
-      while(textWidth(starData[i]) > 300){
-        fontSize-=0.5;
+      while(textWidth(starData[i]) > 290){
+        fontSize-=0.25;
         textSize(fontSize);
       }
       text(starData[i],x,y);
-      y += 15;
+      y += 18;
     }
-
+    if(showSolarSystem){
+      textSize(15);
+      text("This star has "+ numPlanets + " planets orbiting it",x,y);
+    }
   }
 }
 
