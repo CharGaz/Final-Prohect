@@ -1,21 +1,20 @@
 class Star{
-    PVector pos;
+    PVector pos; 
     float size;
-    float brightness;
     color col;
     int numPlanets;
-    ArrayList<Planet> planets;
     boolean solarSystem;
+    ArrayList<Planet> planets;
+
 
     //CONSTRUCTOR:
-    Star(float x, float y, float size, float brightness, color col, int n){
+    Star(float x, float y, float size, color col, int planets){
         this.pos = new PVector(x,y);
         this.size = size;
-        this.brightness = brightness;
         this.col = col;
-        this.numPlanets = n;
-        this.planets = new ArrayList<Planet>();
+        this.numPlanets = planets;
         this.solarSystem = false;
+        this.planets = new ArrayList<Planet>();
         
     }
 
@@ -23,101 +22,100 @@ class Star{
         stroke(this.col);
         strokeWeight(this.size);
         circle(this.pos.x, this.pos.y, this.size);
-        
+  
     } 
-    void solarSystem(){
-        if(solarSystem){
-            //drawing star in the middle
+
+    
+
+    void solarSystem(float x, float y, float r){
+        if(solarSystem){ //Only runs when the individual solar system is being called 
+            //Drawing the star in the middle of the screen
+            if(!planetText){ //Stops the title of the screen glitiching 
+                surface.setTitle("Solar System"); //Chaning the title of the window
+            }
+            
+
             stroke(this.col);
             fill(this.col);
-            circle(500,400,this.size*50);
+            circle(x,y,r);
 
-            a=initAngle[m];
-            c=orbitDirection[m++];  
-            b=initAngle[m];
-            d=orbitDirection[m++];
+            //Needed for the orbit calculations
+            m = 0;
+            
+            
 
-            int z = 2;
+            float z = 1.5; //Distance between planets and the first planet vs the stars
+            
             for(int i = 0; i < this.numPlanets; i++){
-                float x = 500+z*(this.size*50)*cos((t*c*(pow(2,2))*2.*PI/360)+a);
-                float y = 400+z*(this.size*50)*sin((t*c*(pow(2,2))*2.*PI/360)+a);
+                //Needed for the orbit angles and direction
+                a=initAngle[m];
+                c=orbitDirection[m++];  
 
-                planets(x,y ,(this.size*50)/12);
-                z += random(2,3);
-            }
-        }
-         
-    }
+                
 
-    void planets(float x, float y, float size){
-        stroke(0,255,0);
-        fill(0,255,0);
-        circle(x, y,size);
+                //adding planets to class, and drawing each planet
+                if(this.planets.size() < this.numPlanets){ //only adding a certian number of planets
+                    //Setting up how many moons each planet will have(It will be random)
+                    int planetMoons = int(random(2,5));
+
+                    //X and Y positions for the planet to be in an ellipse orbit. 
+                    float planetX = x+ z * r * cos(( t * c * (pow(2,2)) *TWO_PI/360) + a);
+                    float planetY = y+ z * r * sin(( t * c * (pow(2,2)) *TWO_PI/360) + a);
+
+                    //Adding planet to planet class
+                    this.planets.add(new Planet(planetX,planetY,r/(random(8,11)), r, z, planetMoons));
+                }
+                this.planets.get(i).drawPlanet();  //Drawing the planets of the solar system
+        
+                //How far apart each planet will be from each other
+                z += r/40;
+            } 
+            
+        } 
     }
- 
 
     void starInfo(){ //Lots of if statments for this :(
-        if(showSolarSystem){
-            numPlanets = this.numPlanets;
+        if(showSolarSystem){ //Only run when the individual solar system is being called
+            planetsOrbiting = "This star has " + this.numPlanets + " planets orbiting it"; //Getting the amount of planets orbiting the star
 
-            if(this.col == color(255,100,100)){
-                startLine = 2;
-                endLine = 8;
+
+            //end and start lines are being updated according to the star color
+            if(this.col == color(255, 100, 100)){ //Red star
+                sStartLine = 2;
+                sEndLine = 8;
+            }
+
+            if(this.col == color(255)){ //White star
+                sStartLine = 9;
+                sEndLine = 14;
+            }
+
+            if(this.col == color(255, 200, 150)){ //Light orange star
+                sStartLine = 17;
+                sEndLine = 20;
 
             }
 
-            if(this.col == color(255,255,255) && this.size < 1.5){
-                startLine = 8;
-                endLine = 14;
-            }
-        }
-    
-        else{ //If showing galaxy, it will print 'no star selected'
-            startLine = 0;
-            endLine = 1;
-        }
+            if(this.col == color(100, 200, 255)){ //Blue star
+                sStartLine = 22;
+                sEndLine = 26;
 
-       
+            }
+
+            if(this.col == color(255, 255, 100)){ //Yellow star
+                sStartLine = 28;
+                sEndLine = 32;  
+            }
+
+            if(this.col == color(255, 150, 50)){ //Dark Orange star
+                sStartLine = 34;
+                sEndLine = 38;
+            }
+
+        }
     }
 }
 
-//void solarSystem(float x, float y, float r, int n){
-    //     if(solarSystem){
-    //         if(n == 1){
-    //             stroke(this.col);
-    //             fill(this.col);
-    //         }
-    //         else if(n==2){
-    //             stroke(255,0,0);
-    //             fill(255,0,0);
-    //         }
-    //         else if(n == 3){
-    //             strokeWeight(r/12);
-    //             stroke(0,255,0);
-    //             fill(0,255,0);
-    //         }
-    //         else{
-    //             stroke(0,0,255);
-    //             fill(0,0,255);
-    //         }
-    //         circle(x,y, r);
-    //         if(n == 1){
-    //             m = 0;
-    //         }
 
-    //         a=initAngle[m];
-    //         c=orbitDirection[m++];  
-    //         b=initAngle[m];
-    //         d=orbitDirection[m++];
-
-    //         if( r > 1){
-    //             int z = 2;
-    //             for(int i = 0; i < this.systemBody; i++){
-    //                 solarSystem(x+z*r*cos((t*c*(pow(2,n-1))*2.*PI/360)+a),y+z*r*sin((t*c*(pow(2,n-1))*2.*PI/360)+a),r/12,n+1);
-    //                 z += random(2,3);
-    //             }
-    //         }
-    //     } 
-    // }
 
 

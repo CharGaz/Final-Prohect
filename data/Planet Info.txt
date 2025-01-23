@@ -1,0 +1,12 @@
+This planet can support life
+Its surface is over 50% water
+The average tempurature of the planets 
+surface is between 5 and 30 degrees celcius
+allowing for life to be sustained.
+HURRAY!!!!
+
+This planet CANNOT support life
+It does not have enough water and heat 
+to support life.
+
+To select another planet, unselect this one,

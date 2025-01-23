@@ -15,77 +15,90 @@
  */
 
 synchronized public void win_draw1(PApplet appc, GWinData data) { //_CODE_:window1:915552:
-  appc.background(230);
+  appc.background(0);
 } //_CODE_:window1:915552:
 
 public void zoom_Clicked(GButton source, GEvent event) { //_CODE_:zoom:736080:
-  scale += scalefactor;
+  scale += scalefactor; //Increasing scale --> zooming in
 
 } //_CODE_:zoom:736080:
 
-public void zoomOut_Clicked(GButton source, GEvent event) { //_CODE_:zoomOut:358050:
-  if(1 < scale){
-    scale -= scalefactor;
+public void zoomOut_Clicked(GButton source, GEvent event) { //_CODE_:zoomOut:358050
+  if( scale - scalefactor > 0.225){ //Making sure the user does not zoom out to far.
+    scale -= scalefactor; //decreasing scale --> zooming out
+
   }
   
 } //_CODE_:zoomOut:358050:
 
 public void panLeft_Clickled(GButton source, GEvent event) { //_CODE_:panLeft:876359:
-  if( 500/scale < xPan){
-    xPan -= panfactor;
+  if( 500/scale < xPan || showSolarSystem){
+    xPan -= panfactor; //Shifting left
   }
   
 } //_CODE_:panLeft:876359:
 
 public void panRight_Clicked(GButton source, GEvent event) { //_CODE_:panRight:905221:
-  if( xPan < 500*scale){
-    xPan += panfactor;
+  if( xPan < 500*scale || showSolarSystem){
+    xPan += panfactor; //Shifting right
   }
 } //_CODE_:panRight:905221:
 
 public void panUp_Clicked(GButton source, GEvent event) { //_CODE_:panUp:619938:
-  if( 400/scale < yPan){
-    yPan -= panfactor;
+  if( 400/scale < yPan || showSolarSystem){
+    yPan -= panfactor; //Shifting up
   }
 } //_CODE_:panUp:619938:
 
 public void panDown_Clicked(GButton source, GEvent event) { //_CODE_:panDown:224973:
-  if( yPan < 400*scale){
-    yPan += panfactor;
+  if( yPan < 400*scale || showSolarSystem){
+    yPan += panfactor; //Shifting down
   }
 } //_CODE_:panDown:224973:
 
 public void scaleFactor_Change(GSlider source, GEvent event) { //_CODE_:scaleFactor:398326:
-  scalefactor = scaleFactor.getValueF();
+  scalefactor = scaleFactor.getValueF(); //getting the scale factor 
 } //_CODE_:scaleFactor:398326:
 
 public void panFactor_Change(GSlider source, GEvent event) { //_CODE_:panFactor:327259:
-  panfactor = panFactor.getValueI();
+  panfactor = panFactor.getValueI(); //getting the pan factor
 } //_CODE_:panFactor:327259:
 
 public void resetClicked(GButton source, GEvent event) { //_CODE_:resetButton:256849:
-  resetView();
+  resetView(); //calling for the screen to be reset
 } //_CODE_:resetButton:256849:
 
 public void galaxyResetClicked(GButton source, GEvent event) { //_CODE_:galaxyReset:601214:
+  //setting all of these to false since the galaxy is now being shown
   showSolarSystem = false;
+  animation = true;
+  planetText = false;
+  blackHole = false;
+  t = 0;
 
+  //not needed for galaxy view
   pauseButton.setVisible(false);
   playButton.setVisible(false);
+  galaxyReset.setVisible(false);
+  unSelect.setVisible(false);
+  //reseting the screen 
+  resetView();
 
-  animation = true;
-  
 } //_CODE_:galaxyReset:601214:
 
 public void pauseButtonClicked(GButton source, GEvent event) { //_CODE_:pauseButton:316338:
-  animation = false;
+  animation = false; //pausing the planet movement
 } //_CODE_:pauseButton:316338:
 
 
 public void playButtonClicked(GButton source, GEvent event) { //_CODE_:playButton:622061:
-  animation = true;
+  animation = true; //playing the planet movement
 } //_CODE_:playButton:622061:
 
+public void unSelect_Clicked(GButton source, GEvent event) { //_CODE_:unSelect:251590:
+  unSelect.setVisible(false);
+  planetText = false; //unselecting the planet
+} //_CODE_:unSelect:251590:
 
 
 // Create all the GUI controls. 
@@ -124,7 +137,7 @@ public void createGUI(){
   panDown.setText("↓");
   panDown.setLocalColorScheme(GCScheme.CYAN_SCHEME);
   panDown.addEventHandler(this, "panDown_Clicked");
-  scaleFactor = new GSlider(window1, 11, 95, 80, 40, 10.0);
+  scaleFactor = new GSlider(window1, 10, 120, 80, 40, 10.0);
   scaleFactor.setShowValue(true);
   scaleFactor.setLimits(0.1, 0.1, 1.0);
   scaleFactor.setNbrTicks(5);
@@ -132,29 +145,48 @@ public void createGUI(){
   scaleFactor.setLocalColorScheme(GCScheme.CYAN_SCHEME);
   scaleFactor.setOpaque(false);
   scaleFactor.addEventHandler(this, "scaleFactor_Change");
-  panFactor = new GSlider(window1, 134, 94, 100, 40, 10.0);
+  panFactor = new GSlider(window1, 128, 120, 100, 40, 10.0);
   panFactor.setShowValue(true);
   panFactor.setLimits(10, 10, 20);
   panFactor.setNumberFormat(G4P.INTEGER, 0);
   panFactor.setLocalColorScheme(GCScheme.CYAN_SCHEME);
   panFactor.setOpaque(false);
   panFactor.addEventHandler(this, "panFactor_Change");
-  resetButton = new GButton(window1, 11, 148, 80, 30);
+  resetButton = new GButton(window1, 193, 173, 80, 30);
   resetButton.setText("Reset View");
   resetButton.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
   resetButton.addEventHandler(this, "resetClicked");
-  galaxyReset = new GButton(window1, 134, 148, 80, 30);
+  galaxyReset = new GButton(window1, 10, 215, 80, 30);
   galaxyReset.setText("Back to Galaxy");
   galaxyReset.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
   galaxyReset.addEventHandler(this, "galaxyResetClicked");
-  pauseButton = new GButton(window1, 135, 189, 80, 30);
+  pauseButton = new GButton(window1, 193, 260, 80, 30);
   pauseButton.setText("Pause");
   pauseButton.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
   pauseButton.addEventHandler(this, "pauseButtonClicked");
-  playButton = new GButton(window1, 10, 189, 80, 30);
+  playButton = new GButton(window1, 10, 260, 80, 30);
   playButton.setText("Play");
   playButton.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
   playButton.addEventHandler(this, "playButtonClicked");
+  unSelect = new GButton(window1, 193, 215, 80, 30);
+  unSelect.setText("Undo Select");
+  unSelect.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
+  unSelect.addEventHandler(this, "unSelect_Clicked");
+  label1 = new GLabel(window1, 9, 96, 80, 20);
+  label1.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  label1.setText("Scale factor");
+  label1.setLocalColorScheme(GCScheme.SCHEME_15);
+  label1.setOpaque(false);
+  label2 = new GLabel(window1, 139, 94, 80, 20);
+  label2.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  label2.setText("Pan Factor");
+  label2.setLocalColorScheme(GCScheme.SCHEME_15);
+  label2.setOpaque(false);
+  label3 = new GLabel(window1, 3, 165, 120, 40);
+  label3.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  label3.setText("To select desired object, simply click");
+  label3.setLocalColorScheme(GCScheme.SCHEME_15);
+  label3.setOpaque(false);
   window1.loop();
 }
 
@@ -173,3 +205,7 @@ GButton resetButton;
 GButton galaxyReset; 
 GButton pauseButton; 
 GButton playButton; 
+GButton unSelect; 
+GLabel label1; 
+GLabel label2; 
+GLabel label3; 
